@@ -2501,3 +2501,9 @@ Warning: Error in tag: argument is missing, with no default
   61: tag
   60: tags$form
   56: sidebarPanel
+  C-c C-c
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7734

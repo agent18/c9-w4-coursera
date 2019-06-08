@@ -2341,4 +2341,167 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > setwd('/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/')
-> 
+> runApp()
+Error in runApp() : could not find function "runApp"
+> library(shiny)
+> runApp()
+
+Listening on http://127.0.0.1:7734
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                        ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7734
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7734
+Warning: Error in ggplot: could not find function "ggplot"
+  167: renderPlot [/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R#42]
+  165: func
+  125: drawPlot
+  111: <reactive:plotObj>
+   95: drawReactive
+   82: origRenderFunc
+   81: output$plot1
+    1: runApp
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:38:136: unexpected symbol
+37:     output$hits <-
+38:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+15:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+15:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+38:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+38:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+Registered S3 methods overwritten by 'ggplot2':
+  method         from 
+  [.quosures     rlang
+  c.quosures     rlang
+  print.quosures rlang
+Warning: Error in tag: argument is missing, with no default
+  61: tag
+  60: tags$form
+  56: sidebarPanel
+  C-c C-c
+  C-c C-c
+
+> runApp
