@@ -1,0 +1,2503 @@
+
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> setwd('/home/eghx/agent18/DSS/assignments/assignment-c9-w2/')
+> dgamma
+function (x, shape, rate = 1, scale = 1/rate, log = FALSE) 
+{
+    if (!missing(rate) && !missing(scale)) {
+        if (abs(rate * scale - 1) < 1e-15) 
+            warning("specify 'rate' or 'scale' but not both")
+        else stop("specify 'rate' or 'scale' but not both")
+    }
+    .Call(C_dgamma, x, shape, scale, log)
+}
+<bytecode: 0x346b608>
+<environment: namespace:stats>
+> predict
+function (object, ...) 
+UseMethod("predict")
+<bytecode: 0x20f5b78>
+<environment: namespace:stats>
+> lm
+function (formula, data, subset, weights, na.action, method = "qr", 
+    model = TRUE, x = FALSE, y = FALSE, qr = TRUE, singular.ok = TRUE, 
+    contrasts = NULL, offset, ...) 
+{
+    ret.x <- x
+    ret.y <- y
+    cl <- match.call()
+    mf <- match.call(expand.dots = FALSE)
+    m <- match(c("formula", "data", "subset", "weights", "na.action", 
+        "offset"), names(mf), 0L)
+    mf <- mf[c(1L, m)]
+    mf$drop.unused.levels <- TRUE
+    mf[[1L]] <- quote(stats::model.frame)
+    mf <- eval(mf, parent.frame())
+    if (method == "model.frame") 
+        return(mf)
+    else if (method != "qr") 
+        warning(gettextf("method = '%s' is not supported. Using 'qr'", 
+            method), domain = NA)
+    mt <- attr(mf, "terms")
+    y <- model.response(mf, "numeric")
+    w <- as.vector(model.weights(mf))
+    if (!is.null(w) && !is.numeric(w)) 
+        stop("'weights' must be a numeric vector")
+    offset <- model.offset(mf)
+    mlm <- is.matrix(y)
+    ny <- if (mlm) 
+        nrow(y)
+    else length(y)
+    if (!is.null(offset)) {
+        if (!mlm) 
+            offset <- as.vector(offset)
+        if (NROW(offset) != ny) 
+            stop(gettextf("number of offsets is %d, should equal %d (number of observations)", 
+                NROW(offset), ny), domain = NA)
+    }
+    if (is.empty.model(mt)) {
+        x <- NULL
+        z <- list(coefficients = if (mlm) matrix(NA_real_, 0, 
+            ncol(y)) else numeric(), residuals = y, fitted.values = 0 * 
+            y, weights = w, rank = 0L, df.residual = if (!is.null(w)) sum(w != 
+            0) else ny)
+        if (!is.null(offset)) {
+            z$fitted.values <- offset
+            z$residuals <- y - offset
+        }
+    }
+    else {
+        x <- model.matrix(mt, mf, contrasts)
+        z <- if (is.null(w)) 
+            lm.fit(x, y, offset = offset, singular.ok = singular.ok, 
+                ...)
+        else lm.wfit(x, y, w, offset = offset, singular.ok = singular.ok, 
+            ...)
+    }
+    class(z) <- c(if (mlm) "mlm", "lm")
+    z$na.action <- attr(mf, "na.action")
+    z$offset <- offset
+    z$contrasts <- attr(x, "contrasts")
+    z$xlevels <- .getXlevels(mt, mf)
+    z$call <- cl
+    z$terms <- mt
+    if (model) 
+        z$model <- mf
+    if (ret.x) 
+        z$x <- x
+    if (ret.y) 
+        z$y <- y
+    if (!qr) 
+        z$qr <- NULL
+    z
+}
+<bytecode: 0x347bf38>
+<environment: namespace:stats>
+> show
+standardGeneric for "show" defined from package "methods"
+
+function (object) 
+standardGeneric("show")
+<bytecode: 0x34a09a0>
+<environment: 0x1ffd6d8>
+Methods may be defined for arguments: object
+Use  showMethods("show")  for currently available ones.
+(This generic function excludes non-simple inheritance; see ?setIs)
+> colSums
+function (x, na.rm = FALSE, dims = 1L) 
+{
+    if (is.data.frame(x)) 
+        x <- as.matrix(x)
+    if (!is.array(x) || length(dn <- dim(x)) < 2L) 
+        stop("'x' must be an array of at least two dimensions")
+    if (dims < 1L || dims > length(dn) - 1L) 
+        stop("invalid 'dims'")
+    n <- prod(dn[id <- seq_len(dims)])
+    dn <- dn[-id]
+    z <- if (is.complex(x)) 
+        .Internal(colSums(Re(x), n, prod(dn), na.rm)) + (0+1i) * 
+            .Internal(colSums(Im(x), n, prod(dn), na.rm))
+    else .Internal(colSums(x, n, prod(dn), na.rm))
+    if (length(dn) > 1L) {
+        dim(z) <- dn
+        dimnames(z) <- dimnames(x)[-id]
+    }
+    else names(z) <- dimnames(x)[[dims + 1L]]
+    z
+}
+<bytecode: 0x35834e0>
+<environment: namespace:base>
+> methods("print")
+  [1] print.acf*                                          
+  [2] print.anova*                                        
+  [3] print.aov*                                          
+  [4] print.aovlist*                                      
+  [5] print.ar*                                           
+  [6] print.Arima*                                        
+  [7] print.arima0*                                       
+  [8] print.AsIs                                          
+  [9] print.aspell*                                       
+ [10] print.aspell_inspect_context*                       
+ [11] print.bibentry*                                     
+ [12] print.Bibtex*                                       
+ [13] print.browseVignettes*                              
+ [14] print.by                                            
+ [15] print.changedFiles*                                 
+ [16] print.check_code_usage_in_package*                  
+ [17] print.check_compiled_code*                          
+ [18] print.check_demo_index*                             
+ [19] print.check_depdef*                                 
+ [20] print.check_details*                                
+ [21] print.check_details_changes*                        
+ [22] print.checkDocFiles*                                
+ [23] print.checkDocStyle*                                
+ [24] print.check_doi_db*                                 
+ [25] print.check_dotInternal*                            
+ [26] print.checkFF*                                      
+ [27] print.check_make_vars*                              
+ [28] print.check_nonAPI_calls*                           
+ [29] print.check_package_code_assign_to_globalenv*       
+ [30] print.check_package_code_attach*                    
+ [31] print.check_package_code_data_into_globalenv*       
+ [32] print.check_package_code_startup_functions*         
+ [33] print.check_package_code_syntax*                    
+ [34] print.check_package_code_unload_functions*          
+ [35] print.check_package_compact_datasets*               
+ [36] print.check_package_CRAN_incoming*                  
+ [37] print.check_package_datasets*                       
+ [38] print.check_package_depends*                        
+ [39] print.check_package_description*                    
+ [40] print.check_package_description_encoding*           
+ [41] print.check_package_license*                        
+ [42] print.check_packages_in_dir*                        
+ [43] print.check_packages_used*                          
+ [44] print.check_po_files*                               
+ [45] print.check_pragmas*                                
+ [46] print.checkRd*                                      
+ [47] print.check_Rd_contents*                            
+ [48] print.check_Rd_line_widths*                         
+ [49] print.check_Rd_metadata*                            
+ [50] print.check_Rd_xrefs*                               
+ [51] print.check_RegSym_calls*                           
+ [52] print.checkReplaceFuns*                             
+ [53] print.checkS3methods*                               
+ [54] print.check_S3_methods_needing_delayed_registration*
+ [55] print.check_so_symbols*                             
+ [56] print.check_T_and_F*                                
+ [57] print.checkTnF*                                     
+ [58] print.check_url_db*                                 
+ [59] print.check_vignette_index*                         
+ [60] print.checkVignettes*                               
+ [61] print.citation*                                     
+ [62] print.codoc*                                        
+ [63] print.codocClasses*                                 
+ [64] print.codocData*                                    
+ [65] print.colorConverter*                               
+ [66] print.compactPDF*                                   
+ [67] print.condition                                     
+ [68] print.connection                                    
+ [69] print.CRAN_package_reverse_dependencies_and_views*  
+ [70] print.data.frame                                    
+ [71] print.Date                                          
+ [72] print.default                                       
+ [73] print.dendrogram*                                   
+ [74] print.density*                                      
+ [75] print.difftime                                      
+ [76] print.dist*                                         
+ [77] print.Dlist                                         
+ [78] print.DLLInfo                                       
+ [79] print.DLLInfoList                                   
+ [80] print.DLLRegisteredRoutines                         
+ [81] print.dummy_coef*                                   
+ [82] print.dummy_coef_list*                              
+ [83] print.ecdf*                                         
+ [84] print.eigen                                         
+ [85] print.factanal*                                     
+ [86] print.factor                                        
+ [87] print.family*                                       
+ [88] print.fileSnapshot*                                 
+ [89] print.findLineNumResult*                            
+ [90] print.formula*                                      
+ [91] print.ftable*                                       
+ [92] print.function                                      
+ [93] print.getAnywhere*                                  
+ [94] print.glm*                                          
+ [95] print.hclust*                                       
+ [96] print.help_files_with_topic*                        
+ [97] print.hexmode                                       
+ [98] print.HoltWinters*                                  
+ [99] print.hsearch*                                      
+[100] print.hsearch_db*                                   
+[101] print.htest*                                        
+[102] print.infl*                                         
+[103] print.integrate*                                    
+[104] print.isoreg*                                       
+[105] print.kmeans*                                       
+[106] print.Latex*                                        
+[107] print.LaTeX*                                        
+[108] print.libraryIQR                                    
+[109] print.listof                                        
+[110] print.lm*                                           
+[111] print.loadings*                                     
+[112] print.loess*                                        
+[113] print.logLik*                                       
+[114] print.ls_str*                                       
+[115] print.medpolish*                                    
+[116] print.MethodsFunction*                              
+[117] print.mtable*                                       
+[118] print.NativeRoutineList                             
+[119] print.news_db*                                      
+[120] print.nls*                                          
+[121] print.noquote                                       
+[122] print.numeric_version                               
+[123] print.object_size*                                  
+[124] print.octmode                                       
+[125] print.packageDescription*                           
+[126] print.packageInfo                                   
+[127] print.packageIQR*                                   
+[128] print.packageStatus*                                
+[129] print.pairwise.htest*                               
+[130] print.person*                                       
+[131] print.POSIXct                                       
+[132] print.POSIXlt                                       
+[133] print.power.htest*                                  
+[134] print.ppr*                                          
+[135] print.prcomp*                                       
+[136] print.princomp*                                     
+[137] print.proc_time                                     
+[138] print.raster*                                       
+[139] print.Rd*                                           
+[140] print.recordedplot*                                 
+[141] print.restart                                       
+[142] print.RGBcolorConverter*                            
+[143] print.rle                                           
+[144] print.roman*                                        
+[145] print.sessionInfo*                                  
+[146] print.simple.list                                   
+[147] print.smooth.spline*                                
+[148] print.socket*                                       
+[149] print.srcfile                                       
+[150] print.srcref                                        
+[151] print.stepfun*                                      
+[152] print.stl*                                          
+[153] print.StructTS*                                     
+[154] print.subdir_tests*                                 
+[155] print.summarize_CRAN_check_status*                  
+[156] print.summary.aov*                                  
+[157] print.summary.aovlist*                              
+[158] print.summaryDefault                                
+[159] print.summary.ecdf*                                 
+[160] print.summary.glm*                                  
+[161] print.summary.lm*                                   
+[162] print.summary.loess*                                
+[163] print.summary.manova*                               
+[164] print.summary.nls*                                  
+[165] print.summary.packageStatus*                        
+[166] print.summary.ppr*                                  
+[167] print.summary.prcomp*                               
+[168] print.summary.princomp*                             
+[169] print.summary.table                                 
+[170] print.summary.warnings                              
+[171] print.table                                         
+[172] print.tables_aov*                                   
+[173] print.terms*                                        
+[174] print.ts*                                           
+[175] print.tskernel*                                     
+[176] print.TukeyHSD*                                     
+[177] print.tukeyline*                                    
+[178] print.tukeysmooth*                                  
+[179] print.undoc*                                        
+[180] print.vignette*                                     
+[181] print.warnings                                      
+[182] print.xgettext*                                     
+[183] print.xngettext*                                    
+[184] print.xtabs*                                        
+see '?methods' for accessing help and source code
+> methods("dgamma")
+no methods found
+> methods("lm")
+[1] lm.fit       lm.influence lm.wfit     
+see '?methods' for accessing help and source code
+Warning message:
+In .S3methods(generic.function, class, envir) :
+  function 'lm' appears not to be S3 generic; found functions that look like S3 methods
+> methods("show")
+ [1] show,ANY-method                       show,classGeneratorFunction-method   
+ [3] show,classRepresentation-method       show,envRefClass-method              
+ [5] show,externalRefMethod-method         show,genericFunction-method          
+ [7] show,genericFunctionWithTrace-method  show,MethodDefinition-method         
+ [9] show,MethodDefinitionWithTrace-method show,MethodSelectionReport-method    
+[11] show,MethodWithNext-method            show,MethodWithNextWithTrace-method  
+[13] show,namedList-method                 show,ObjectsWithPackage-method       
+[15] show,oldClass-method                  show,refClassRepresentation-method   
+[17] show,refMethodDef-method              show,refObjectGenerator-method       
+[19] show,signature-method                 show,sourceEnvironment-method        
+[21] show,traceable-method                
+see '?methods' for accessing help and source code
+> methods("predict")
+ [1] predict.ar*                predict.Arima*            
+ [3] predict.arima0*            predict.glm               
+ [5] predict.HoltWinters*       predict.lm                
+ [7] predict.loess*             predict.mlm*              
+ [9] predict.nls*               predict.poly*             
+[11] predict.ppr*               predict.prcomp*           
+[13] predict.princomp*          predict.smooth.spline*    
+[15] predict.smooth.spline.fit* predict.StructTS*         
+see '?methods' for accessing help and source code
+> methods("colSums")
+no methods found
+> methods("lm")
+[1] lm.fit       lm.influence lm.wfit     
+see '?methods' for accessing help and source code
+Warning message:
+In .S3methods(generic.function, class, envir) :
+  function 'lm' appears not to be S3 generic; found functions that look like S3 methods
+> install.packages("plotly")
+> 
+> install.packages("plotly")
+Installing package into ‘/home/eghx/R/x86_64-pc-linux-gnu-library/3.6’
+(as ‘lib’ is unspecified)
+also installing the dependency ‘hexbin’
+
+trying URL 'https://cloud.r-project.org/src/contrib/hexbin_1.27.3.tar.gz'
+Content type 'application/x-gzip' length 586077 bytes (572 KB)
+==================================================
+downloaded 572 KB
+
+trying URL 'https://cloud.r-project.org/src/contrib/plotly_4.9.0.tar.gz'
+Content type 'application/x-gzip' length 3469680 bytes (3.3 MB)
+==================================================
+downloaded 3.3 MB
+
+* installing *source* package ‘hexbin’ ...
+** package ‘hexbin’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+gfortran  -fpic  -g -O2 -fstack-protector-strong  -c hbin.f -o hbin.o
+gfortran  -fpic  -g -O2 -fstack-protector-strong  -c hcell.f -o hcell.o
+gfortran  -fpic  -g -O2 -fstack-protector-strong  -c herode.f -o herode.o
+gfortran  -fpic  -g -O2 -fstack-protector-strong  -c hsm.f -o hsm.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c reg.c -o reg.o
+gcc -std=gnu99 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o hexbin.so hbin.o hcell.o herode.o hsm.o reg.o -lgfortran -lm -lquadmath -L/usr/lib/R/lib -lR
+installing to /home/eghx/R/x86_64-pc-linux-gnu-library/3.6/00LOCK-hexbin/00new/hexbin/libs
+** R
+** data
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (hexbin)
+* installing *source* package ‘plotly’ ...
+** package ‘plotly’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** data
+*** moving datasets to lazyload DB
+** demo
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (plotly)
+
+The downloaded source packages are in
+	‘/tmp/RtmpeELRnN/downloaded_packages’
+> setwd("../assignment-c9-w4/c9-w4-coursera/")
+> runAapp()
+Error in runAapp() : could not find function "runAapp"
+> runApp()
+Error in runApp() : could not find function "runApp"
+> library(shiny)
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7738
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:11:9: unexpected symbol
+10:         sliderInput("N","Number of samples",0,1000,30)
+11:         actionButton
+            ^
+Possible missing comma at:
+11:        actionButton("reset","Click to resample")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         plotOutput
+            ^
+Possible missing comma at:
+16:        plotOutput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         plotOutput
+            ^
+Possible missing comma at:
+16:        plotOutput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         plotOutput
+            ^
+Possible missing comma at:
+16:        plotOutput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         plotOutput
+            ^
+Possible missing comma at:
+16:        plotOutput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         plotOutput
+            ^
+Possible missing comma at:
+16:        plotOutput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         plotOutput
+            ^
+Possible missing comma at:
+16:        plotOutput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Warning: Error in .getReactiveEnvironment()$currentContext: Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+  53: stop
+  52: .getReactiveEnvironment()$currentContext
+  51: getCurrentContext
+  50: .subset2(x, "impl")$get
+  49: $.reactivevalues
+  47: server [/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R#4]
+Error in .getReactiveEnvironment()$currentContext() : 
+  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+  C-c C-c
+> runApp()
+
+Listening on http://127.0.0.1:7738
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         testOutput
+            ^
+Possible missing comma at:
+16:        testOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:16:9: unexpected symbol
+15:         h3("Main Panel Text")
+16:         textOutput
+            ^
+Possible missing comma at:
+16:        textOutput("hits")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Warning: Error in .getReactiveEnvironment()$currentContext: Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+  53: stop
+  52: .getReactiveEnvironment()$currentContext
+  51: getCurrentContext
+  50: .subset2(x, "impl")$get
+  49: $.reactivevalues
+  47: server [/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R#3]
+Error in .getReactiveEnvironment()$currentContext() : 
+  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+Warning: Error in cat: argument 1 (type 'closure') cannot be handled by 'cat'
+  104: cat
+   97: transform
+   96: func
+   94: f
+   93: Reduce
+   84: do
+   83: hybrid_chain
+   82: origRenderFunc
+   81: output$hits
+    1: runApp
+Warning: Error in cat: argument 1 (type 'closure') cannot be handled by 'cat'
+  104: cat
+   97: transform
+   96: func
+   94: f
+   93: Reduce
+   84: do
+   83: hybrid_chain
+   82: origRenderFunc
+   81: output$hits
+    1: runApp
+Warning: Error in cat: argument 1 (type 'closure') cannot be handled by 'cat'
+  104: cat
+   97: transform
+   96: func
+   94: f
+   93: Reduce
+   84: do
+   83: hybrid_chain
+   82: origRenderFunc
+   81: output$hits
+    1: runApp
+Warning: Error in cat: argument 1 (type 'closure') cannot be handled by 'cat'
+  104: cat
+   97: transform
+   96: func
+   94: f
+   93: Reduce
+   84: do
+   83: hybrid_chain
+   82: origRenderFunc
+   81: output$hits
+    1: runApp
+Warning: Error in cat: argument 1 (type 'closure') cannot be handled by 'cat'
+  104: cat
+   97: transform
+   96: func
+   94: f
+   93: Reduce
+   84: do
+   83: hybrid_chain
+   82: origRenderFunc
+   81: output$hits
+    1: runApp
+Warning: Error in cat: argument 1 (type 'closure') cannot be handled by 'cat'
+  104: cat
+   97: transform
+   96: func
+   94: f
+   93: Reduce
+   84: do
+   83: hybrid_chain
+   82: origRenderFunc
+   81: output$hits
+    1: runApp
+Warning: Error in cat: argument 1 (type 'closure') cannot be handled by 'cat'
+  104: cat
+   97: transform
+   96: func
+   94: f
+   93: Reduce
+   84: do
+   83: hybrid_chain
+   82: origRenderFunc
+   81: output$hits
+    1: runApp
+Warning: Error in cat: argument 1 (type 'closure') cannot be handled by 'cat'
+  104: cat
+   97: transform
+   96: func
+   94: f
+   93: Reduce
+   84: do
+   83: hybrid_chain
+   82: origRenderFunc
+   81: output$hits
+    1: runApp
+  C-c C-c
+
+> library(shiny)
+library(miniUI)
+multiplyNumbers <- function(numbers1, numbers2) {
+  ui <- miniPage(
+    gadgetTitleBar("Multiply Two Numbers"),
+    miniContentPanel(
+      selectInput("num1", "First Number", choices=numbers1),
+      selectInput("num2", "Second Number", choices=numbers2)
+    )
+  )
+  server <- function(input, output, session) {
+    observeEvent(input$done, {
+      num1 <- as.numeric(input$num1)
+      num2 <- as.numeric(input$num2)
+      stopApp(num1 * num2)
+    })
+  }
+  runGadget(ui, server)
+}
+library(shiny)
+> library(miniUI)
+> multiplyNumbers <- function(numbers1, numbers2) {
++   ui <- miniPage(
++     gadgetTitleBar("Multiply Two Numbers"),
++     miniContentPanel(
++       selectInput("num1", "First Number", choices=numbers1),
++       selectInput("num2", "Second Number", choices=numbers2)
++     )
++   )
++   server <- function(input, output, session) {
++     observeEvent(input$done, {
++       num1 <- as.numeric(input$num1)
++       num2 <- as.numeric(input$num2)
++       stopApp(num1 * num2)
++     })
++   }
++   runGadget(ui, server)
++ }
+> mutpiplyNumbers(2,1)
+Error in mutpiplyNumbers(2, 1) : 
+  could not find function "mutpiplyNumbers"
+> multiplyNumbers(2,1)
+
+Listening on http://127.0.0.1:7738
+multiplyNumbers <- function(numbers1, numbers2) {
+  ui <- miniPage(
+    gadgetTitleBar("Multiply Two Numbers"),
+    miniContentPanel(
+      selectInput("num1", "First Number", choices=numbers1),
+      selectInput("num2", "Second Number", choices=numbers2)
+    )
+  )
+  server <- function(input, output, session) {
+    observeEvent(input$done, {
+      num1 <- as.numeric(input$num1)
+      num2 <- as.numeric(input$num2)
+      stopApp(num1 * num2)
+    })
+  }
+  runGadget(ui, server)
+}  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+
+> 
+> 
+> rbinom(20,1,0.6)
+ [1] 1 1 1 0 0 1 0 1 1 0 1 0 0 1 1 0 1 1 1 0
+> mean(rbinom(20,1,0.6))
+[1] 0.65
+> sd(rbinom(20,1,0.6))
+[1] 0.5026247
+> sd(rbinom(20,1,0.6))
+[1] 0.5026247
+> sd(rbinom(20,1,0.6))
+[1] 0.4442617
+> sd(rbinom(20,1,0.6))
+[1] 0.5104178
+> sd(rbinom(20,1,0.6))
+[1] 0.4893605
+> sd(rbinom(20,1,0.6))
+[1] 0.5026247
+> rbinom(20,10,0.6))
+Error: unexpected ')' in "rbinom(20,10,0.6))"
+> rbinom(20,10,0.6)
+ [1] 7 7 5 8 5 8 6 6 8 6 7 6 6 7 3 7 8 6 6 2
+> rbinom(30,30,0.5)
+ [1] 16 16 15 12 16 11 15 16 15 11 19 19 13 10 17 16 17 22 22 18 14 14 19 15 19
+[26] 14 19 16 16 14
+> rbinom(30,1,0.5)
+ [1] 1 1 0 0 0 0 1 1 0 0 1 0 0 0 1 0 1 1 0 1 0 0 1 0 1 0 0 1 1 0
+> mean()rbinom(30,1,0.5)
+Error: unexpected symbol in "mean()rbinom"
+> mean(rbinom(30,1,0.5))
+[1] 0.3666667
+> sqrt(2)
+[1] 1.414214
+> between(1,2,0)
+Error in between(1, 2, 0) : could not find function "between"
+>    
+> 
+> 
+> qbinom(0.95,size=1,prob=0.6)
+[1] 1
+> n <- 20
+> CI <- 95
+> p <- 0.6
+> x <- rbinom(n,prob=p)
+Error in rbinom(n, prob = p) : 
+  argument "size" is missing, with no default
+> x <- rbinom(n,size=1,prob=p)
+> pHat <- mean(x)
+> x
+ [1] 0 1 1 1 1 1 1 1 0 0 0 0 1 1 0 1 0 0 0 1
+> pHat
+[1] 0.55
+> pSD <- sd(x)
+> pSD
+[1] 0.5104178
+> sqrt(x*(1-x)/n)
+ [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+> sqrt(pHat*(1-pHat)/n)
+[1] 0.111243
+> qnorm(0.975)
+[1] 1.959964
+> qnorm(0.95)
+[1] 1.644854
+> qnorm(0.975)
+[1] 1.959964
+> qnorm(0.025)
+[1] -1.959964
+>         x <- rbinom(n,size=1,prob=p)
+        pHat <- mean(x)
+        pSD <- sqrt(pHat*(1-pHat)/n)
+        CI.corrected <- ((100-CI)/2+CI)/100
+        q <- qnorm(CI.corrected)
+        hits <- (pHat+q*pSD)<p && (pHat-q*pSD)>p
+        x <- rbinom(n,size=1,prob=p)
+>         pHat <- mean(x)
+>         pSD <- sqrt(pHat*(1-pHat)/n)
+>         CI.corrected <- ((100-CI)/2+CI)/100
+>         q <- qnorm(CI.corrected)
+>         hits <- (pHat+q*pSD)<p && (pHat-q*pSD)>p
+> hits
+[1] FALSE
+> x
+ [1] 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 1 1 0
+> pHat
+[1] 0.3
+> pSD
+[1] 0.1024695
+> q
+[1] 1.959964
+>         x <- rbinom(n,size=1,prob=p)
+        pHat <- mean(x)
+        pSD <- sqrt(pHat*(1-pHat)/n)
+        CI.corrected <- ((100-CI)/2+CI)/100
+        q <- qnorm(CI.corrected)
+        hits <- (pHat+q*pSD)>p && (pHat-q*pSD)<p
+        x <- rbinom(n,size=1,prob=p)
+>         pHat <- mean(x)
+>         pSD <- sqrt(pHat*(1-pHat)/n)
+>         CI.corrected <- ((100-CI)/2+CI)/100
+>         q <- qnorm(CI.corrected)
+>         hits <- (pHat+q*pSD)>p && (pHat-q*pSD)<p
+> hits
+[1] TRUE
+>         x <- rbinom(n,size=1,prob=p)
+        pHat <- mean(x)
+        pSD <- sqrt(pHat*(1-pHat)/n)
+        CI.corrected <- ((100-CI)/2+CI)/100
+        q <- qnorm(CI.corrected)
+        hits <- (pHat+q*pSD)>p && (pHat-q*pSD)<p
+        x <- rbinom(n,size=1,prob=p)
+>         pHat <- mean(x)
+>         pSD <- sqrt(pHat*(1-pHat)/n)
+>         CI.corrected <- ((100-CI)/2+CI)/100
+>         q <- qnorm(CI.corrected)
+>         hits <- (pHat+q*pSD)>p && (pHat-q*pSD)<p
+> hits
+[1] TRUE
+>         x <- rbinom(n,size=1,prob=p)
+        pHat <- mean(x)
+        pSD <- sqrt(pHat*(1-pHat)/n)
+        CI.corrected <- ((100-CI)/2+CI)/100
+        q <- qnorm(CI.corrected)
+        hits <- (pHat+q*pSD)>p && (pHat-q*pSD)<p
+        x <- rbinom(n,size=1,prob=p)
+>         pHat <- mean(x)
+>         pSD <- sqrt(pHat*(1-pHat)/n)
+>         CI.corrected <- ((100-CI)/2+CI)/100
+>         q <- qnorm(CI.corrected)
+>         hits <- (pHat+q*pSD)>p && (pHat-q*pSD)<p
+> hits
+[1] TRUE
+> pHat
+[1] 0.65
+> df <- data.frame(matrix(N,3))
+> df[i,]
+Error in `[.data.frame`(df, i, ) : object 'i' not found
+> i=1
+> df[i,] <- c("False",2,3)
+Error in `[<-.data.frame`(`*tmp*`, i, , value = c("False", "2", "3")) : 
+  replacement has 3 rows, data has 1
+> df[i,] <- list("False",2,3)
+Warning message:
+In `[<-.data.frame`(`*tmp*`, i, , value = list("False", 2, 3)) :
+  provided 3 variables to replace 1 variables
+> df
+  matrix.N..3.
+1        False
+2        1e+05
+3        1e+05
+> df
+  matrix.N..3.
+1        False
+2        1e+05
+3        1e+05
+> df <- data.frame(matrix(N,3))
+> df
+  matrix.N..3.
+1        1e+05
+2        1e+05
+3        1e+05
+> N <- 10
+> df <- data.frame(matrix(N,3))
+> df
+  matrix.N..3.
+1           10
+2           10
+3           10
+> df <- data.frame(matrix(ncrow=N,ncol=3))
+Error in matrix(ncrow = N, ncol = 3) : unused argument (ncrow = N)
+> df <- data.frame(matrix(nrow=N,ncol=3)
++ )
+> df <- data.frame(matrix(nrow=N,ncol=3))
+> df
+   X1 X2 X3
+1  NA NA NA
+2  NA NA NA
+3  NA NA NA
+4  NA NA NA
+5  NA NA NA
+6  NA NA NA
+7  NA NA NA
+8  NA NA NA
+9  NA NA NA
+10 NA NA NA
+> df[i,] <- list("False",2,3)
+> df
+      X1 X2 X3
+1  False  2  3
+2   <NA> NA NA
+3   <NA> NA NA
+4   <NA> NA NA
+5   <NA> NA NA
+6   <NA> NA NA
+7   <NA> NA NA
+8   <NA> NA NA
+9   <NA> NA NA
+10  <NA> NA NA
+> nrow(df)
+[1] 10
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7738
+Warning: Error in .getReactiveEnvironment()$currentContext: Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+  57: stop
+  56: .getReactiveEnvironment()$currentContext
+  55: getCurrentContext
+  54: .dependents$register
+  53: dec
+  47: server [/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R#28]
+Error in .getReactiveEnvironment()$currentContext() : 
+  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+Warning: Error in .getReactiveEnvironment()$currentContext: Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+  57: stop
+  56: .getReactiveEnvironment()$currentContext
+  55: getCurrentContext
+  54: .dependents$register
+  53: dec
+  47: server [/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R#28]
+Error in .getReactiveEnvironment()$currentContext() : 
+  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+Warning: Error in .getReactiveEnvironment()$currentContext: Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+  57: stop
+  56: .getReactiveEnvironment()$currentContext
+  55: getCurrentContext
+  54: .dependents$register
+  53: dec
+  47: server [/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R#28]
+Error in .getReactiveEnvironment()$currentContext() : 
+  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+hi 90hi 93.33333hi 93.33333hi 96.66667hi 96.66667hi 100hi 96.66667hi 96.66667hi 96.66667
+
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+
+> 
+> 
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+
+> plot
+function (x, y, ...) 
+UseMethod("plot")
+<bytecode: 0x1c620a8>
+<environment: namespace:graphics>
+> plot()
+Error in xy.coords(x, y, xlabel, ylabel, log) : 
+  argument "x" is missing, with no default
+> runif(10,1,2)
+ [1] 1.925297 1.442299 1.720673 1.265626 1.344824 1.803047 1.660079 1.678279
+ [9] 1.228987 1.611847
+> set.seed(0815)
+df <- data.frame(x =1:10,
+                 F =runif(10,1,2),
+                 L =runif(10,0,1),
+                 U =runif(10,2,3))
+
+require(ggplot2)
+ggplot(df, aes(x = x, y = F)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+set.seed(0815)
+> df <- data.frame(x =1:10,
++                  F =runif(10,1,2),
++                  L =runif(10,0,1),
++                  U =runif(10,2,3))
+> 
+> require(ggplot2)
+Loading required package: ggplot2
+Registered S3 methods overwritten by 'ggplot2':
+  method         from 
+  [.quosures     rlang
+  c.quosures     rlang
+  print.quosures rlang
+> ggplot(df, aes(x = x, y = F)) +
++   geom_point(size = 4) +
++   geom_errorbar(aes(ymax = U, ymin = L))
+> df
+    x        F          L        U
+1   1 1.077043 0.12758921 2.644308
+2   2 1.234447 0.10406487 2.914728
+3   3 1.110646 0.86473727 2.425210
+4   4 1.804591 0.36299487 2.334358
+5   5 1.452148 0.84227115 2.315710
+6   6 1.880390 0.27880816 2.325382
+7   7 1.925639 0.78599889 2.198365
+8   8 1.566676 0.49606608 2.668712
+9   9 1.166866 0.07907541 2.652607
+10 10 1.504805 0.65804610 2.044332
+> plotCI()
+Error in plotCI() : could not find function "plotCI"
+> install.packages("r4ss")
+Installing package into ‘/home/eghx/R/x86_64-pc-linux-gnu-library/3.6’
+(as ‘lib’ is unspecified)
+also installing the dependencies ‘gdata’, ‘coda’, ‘corpcor’, ‘gplots’, ‘gtools’, ‘maps’, ‘pso’, ‘truncnorm’
+
+trying URL 'https://cloud.r-project.org/src/contrib/gdata_2.18.0.tar.gz'
+Content type 'application/x-gzip' length 1058430 bytes (1.0 MB)
+==================================================
+downloaded 1.0 MB
+
+trying URL 'https://cloud.r-project.org/src/contrib/coda_0.19-2.tar.gz'
+Content type 'application/x-gzip' length 73530 bytes (71 KB)
+==================================================
+downloaded 71 KB
+
+trying URL 'https://cloud.r-project.org/src/contrib/corpcor_1.6.9.tar.gz'
+Content type 'application/x-gzip' length 22565 bytes (22 KB)
+==================================================
+downloaded 22 KB
+
+trying URL 'https://cloud.r-project.org/src/contrib/gplots_3.0.1.1.tar.gz'
+Content type 'application/x-gzip' length 578652 bytes (565 KB)
+==================================================
+downloaded 565 KB
+
+trying URL 'https://cloud.r-project.org/src/contrib/gtools_3.8.1.tar.gz'
+Content type 'application/x-gzip' length 187516 bytes (183 KB)
+==================================================
+downloaded 183 KB
+
+trying URL 'https://cloud.r-project.org/src/contrib/maps_3.3.0.tar.gz'
+Content type 'application/x-gzip' length 2493744 bytes (2.4 MB)
+==================================================
+downloaded 2.4 MB
+
+trying URL 'https://cloud.r-project.org/src/contrib/pso_1.0.3.tar.gz'
+Content type 'application/x-gzip' length 13314 bytes (13 KB)
+==================================================
+downloaded 13 KB
+
+trying URL 'https://cloud.r-project.org/src/contrib/truncnorm_1.0-8.tar.gz'
+Content type 'application/x-gzip' length 11382 bytes (11 KB)
+==================================================
+downloaded 11 KB
+
+trying URL 'https://cloud.r-project.org/src/contrib/r4ss_1.24.0.tar.gz'
+Content type 'application/x-gzip' length 333963 bytes (326 KB)
+==================================================
+downloaded 326 KB
+
+* installing *source* package ‘coda’ ...
+** package ‘coda’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** data
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (coda)
+* installing *source* package ‘corpcor’ ...
+** package ‘corpcor’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (corpcor)
+* installing *source* package ‘gtools’ ...
+** package ‘gtools’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c gtools_load.c -o gtools_load.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c roman2int.c -o roman2int.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c setTCPNoDelay.c -o setTCPNoDelay.o
+gcc -std=gnu99 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o gtools.so gtools_load.o roman2int.o setTCPNoDelay.o -L/usr/lib/R/lib -lR
+installing to /home/eghx/R/x86_64-pc-linux-gnu-library/3.6/00LOCK-gtools/00new/gtools/libs
+** R
+** data
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (gtools)
+* installing *source* package ‘maps’ ...
+** package ‘maps’ successfully unpacked and MD5 sums checked
+** using staged installation
+checking for gawk... gawk
+configure: creating ./config.status
+config.status: creating src/Makefile
+** libs
+** arch - 
+make -f "/usr/lib/R/etc/Makeconf" -f Makefile init.o mapclip.o mapget.o smooth.o thin.o 
+make[1]: Entering directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c init.c -o init.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c mapclip.c -o mapclip.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c mapget.c -o mapget.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c smooth.c -o smooth.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c thin.c -o thin.o
+make[1]: Leaving directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+"/usr/lib/R/bin/R" CMD SHLIB -o maps.so init.o mapclip.o mapget.o smooth.o thin.o 
+make[1]: Entering directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+gcc -std=gnu99 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o maps.so init.o mapclip.o mapget.o smooth.o thin.o -L/usr/lib/R/lib -lR
+make[1]: Leaving directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+make -f "/usr/lib/R/etc/Makeconf" -f Makefile Gmake
+make[1]: Entering directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+gcc -std=gnu99 -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g   -Wl,-Bsymbolic-functions -Wl,-z,relro  Gmake.c   -o Gmake
+make[1]: Leaving directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+make -f "/usr/lib/R/etc/Makeconf" -f Makefile Lmake
+make[1]: Entering directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+gcc -std=gnu99 -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g   -Wl,-Bsymbolic-functions -Wl,-z,relro  Lmake.c   -o Lmake
+make[1]: Leaving directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+make -f "/usr/lib/R/etc/Makeconf" -f Makefile world2.line
+make[1]: Entering directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+Converting world to world2
+gawk -f ./convert.awk < world.line > world2.line
+Creating legacy world2 database
+gawk -f ./legacy_convert.awk < legacy_world.line > legacy_world2.line
+make[1]: Leaving directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+make -f "/usr/lib/R/etc/Makeconf" -f Makefile county.L state.L usa.L nz.L world.L world2.L italy.L france.L state.vbm.L state.carto.L legacy_world.L legacy_world2.L lakes.L
+make[1]: Entering directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+./Lmake 0 s b county.line county.linestats ../inst/mapdata/county.L
+./Lmake 0 s b state.line state.linestats ../inst/mapdata/state.L
+./Lmake 0 s b usa.line usa.linestats ../inst/mapdata/usa.L
+./Lmake 0 s b nz.line nz.linestats ../inst/mapdata/nz.L
+./Lmake 0 s b world.line world.linestats ../inst/mapdata/world.L
+./Lmake 0 s b world2.line world2.linestats ../inst/mapdata/world2.L
+./Lmake 0 s b italy.line italy.linestats ../inst/mapdata/italy.L
+./Lmake 0 s b france.line france.linestats ../inst/mapdata/france.L
+./Lmake 0 p b state.vbm.line state.vbm.linestats ../inst/mapdata/state.vbm.L
+./Lmake 0 p b state.carto.line state.carto.linestats ../inst/mapdata/state.carto.L
+./Lmake 0 s b legacy_world.line legacy_world.linestats ../inst/mapdata/legacy_world.L
+./Lmake 0 s b legacy_world2.line legacy_world2.linestats ../inst/mapdata/legacy_world2.L
+./Lmake 0 s b lakes.line lakes.linestats ../inst/mapdata/lakes.L
+make[1]: Leaving directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+make -f "/usr/lib/R/etc/Makeconf" -f Makefile county.G state.G usa.G nz.G world.G world2.G italy.G france.G state.vbm.G state.carto.G legacy_world.G legacy_world2.G lakes.G
+make[1]: Entering directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+./Gmake b county.gon county.gonstats ../inst/mapdata/county.G ../inst/mapdata/county.L
+./Gmake b state.gon state.gonstats ../inst/mapdata/state.G ../inst/mapdata/state.L
+./Gmake b usa.gon usa.gonstats ../inst/mapdata/usa.G ../inst/mapdata/usa.L
+./Gmake b nz.gon nz.gonstats ../inst/mapdata/nz.G ../inst/mapdata/nz.L
+./Gmake b world.gon world.gonstats ../inst/mapdata/world.G ../inst/mapdata/world.L
+./Gmake b world2.gon world2.gonstats ../inst/mapdata/world2.G ../inst/mapdata/world2.L
+./Gmake b italy.gon italy.gonstats ../inst/mapdata/italy.G ../inst/mapdata/italy.L
+./Gmake b france.gon france.gonstats ../inst/mapdata/france.G ../inst/mapdata/france.L
+./Gmake b state.vbm.gon state.vbm.gonstats ../inst/mapdata/state.vbm.G ../inst/mapdata/state.vbm.L
+./Gmake b state.carto.gon state.carto.gonstats ../inst/mapdata/state.carto.G ../inst/mapdata/state.carto.L
+./Gmake b legacy_world.gon legacy_world.gonstats ../inst/mapdata/legacy_world.G ../inst/mapdata/legacy_world.L
+./Gmake b legacy_world2.gon legacy_world2.gonstats ../inst/mapdata/legacy_world2.G ../inst/mapdata/legacy_world2.L
+./Gmake b lakes.gon lakes.gonstats ../inst/mapdata/lakes.G ../inst/mapdata/lakes.L
+make[1]: Leaving directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+make -f "/usr/lib/R/etc/Makeconf" -f Makefile county.N state.N usa.N nz.N world.N world2.N italy.N france.N state.vbm.N state.carto.N legacy_world.N legacy_world2.N lakes.N
+make[1]: Entering directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+make[1]: Leaving directory '/tmp/RtmpwIbKPP/R.INSTALL7bdb76a9638b/maps/src'
+installing to /home/eghx/R/x86_64-pc-linux-gnu-library/3.6/00LOCK-maps/00new/maps/libs
+** R
+** data
+*** moving datasets to lazyload DB
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (maps)
+* installing *source* package ‘pso’ ...
+** package ‘pso’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+in method for ‘psoptim’ with signature ‘"test.problem","missing","missing","missing","missing","ANY"’: no definition for class “test.problem”
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (pso)
+* installing *source* package ‘truncnorm’ ...
+** package ‘truncnorm’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c exports.c -o exports.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c rtruncnorm.c -o rtruncnorm.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c truncnorm.c -o truncnorm.o
+gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG     -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c zeroin.c -o zeroin.o
+gcc -std=gnu99 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o truncnorm.so exports.o rtruncnorm.o truncnorm.o zeroin.o -L/usr/lib/R/lib -lR
+installing to /home/eghx/R/x86_64-pc-linux-gnu-library/3.6/00LOCK-truncnorm/00new/truncnorm/libs
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (truncnorm)
+* installing *source* package ‘gdata’ ...
+** package ‘gdata’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** data
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (gdata)
+* installing *source* package ‘gplots’ ...
+** package ‘gplots’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** data
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (gplots)
+* installing *source* package ‘r4ss’ ...
+** package ‘r4ss’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (r4ss)
+
+The downloaded source packages are in
+	‘/tmp/RtmpeELRnN/downloaded_packages’
+> plotCI
+Error: object 'plotCI' not found
+> plotCI()
+Error in plotCI() : could not find function "plotCI"
+> install.packages("gplots")
+Installing package into ‘/home/eghx/R/x86_64-pc-linux-gnu-library/3.6’
+(as ‘lib’ is unspecified)
+trying URL 'https://cloud.r-project.org/src/contrib/gplots_3.0.1.1.tar.gz'
+Content type 'application/x-gzip' length 578652 bytes (565 KB)
+==================================================
+downloaded 565 KB
+
+* installing *source* package ‘gplots’ ...
+** package ‘gplots’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** data
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (gplots)
+
+The downloaded source packages are in
+	‘/tmp/RtmpeELRnN/downloaded_packages’
+> library(r4ss)
+> plotCI
+Error: object 'plotCI' not found
+> plotCI()
+Error in plotCI() : could not find function "plotCI"
+> library(gplots)
+
+Attaching package: ‘gplots’
+
+The following object is masked from ‘package:stats’:
+
+    lowess
+
+> plotCI()
+Error in plotCI() : argument "x" is missing, with no default
+>         for (i in 1:N){
+            x <- rbinom(n,size=1,prob=p)
+            pHat <- mean(x)
+            pSD <- sqrt(pHat*(1-pHat)/n)
+            CI.corrected <- ((100-CI)/2+CI)/100
+            q <- qnorm(CI.corrected)
+            pHatMax <- (pHat+q*pSD)
+            pHatMin <- (pHat-q*pSD)
+            hits <- pHatMax>p && pHatMin<p
+            df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin)
+           
+        }
+        for (i in 1:N){
++             x <- rbinom(n,size=1,prob=p)
++             pHat <- mean(x)
++             pSD <- sqrt(pHat*(1-pHat)/n)
++             CI.corrected <- ((100-CI)/2+CI)/100
++             q <- qnorm(CI.corrected)
++             pHatMax <- (pHat+q*pSD)
++             pHatMin <- (pHat-q*pSD)
++             hits <- pHatMax>p && pHatMin<p
++             df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin)
++            
++         }
+Warning messages:
+1: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.55, 0.111242977306435,  :
+  provided 5 variables to replace 4 variables
+2: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.6, 0.109544511501033,  :
+  provided 5 variables to replace 4 variables
+3: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.45, 0.111242977306435,  :
+  provided 5 variables to replace 4 variables
+4: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.4, 0.109544511501033,  :
+  provided 5 variables to replace 4 variables
+5: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.65, 0.106653645038508,  :
+  provided 5 variables to replace 4 variables
+6: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.6, 0.109544511501033,  :
+  provided 5 variables to replace 4 variables
+7: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.6, 0.109544511501033,  :
+  provided 5 variables to replace 4 variables
+8: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.7, 0.102469507659596,  :
+  provided 5 variables to replace 4 variables
+9: In `[<-.data.frame`(`*tmp*`, i, , value = list(FALSE, 0.85, 0.0798435971133566,  :
+  provided 5 variables to replace 4 variables
+10: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.6, 0.109544511501033,  :
+  provided 5 variables to replace 4 variables
+> df
+   x    F         L         U
+1  1 0.55 0.1112430 0.7680322
+2  1 0.60 0.1095445 0.8147033
+3  1 0.45 0.1112430 0.6680322
+4  1 0.40 0.1095445 0.6147033
+5  1 0.65 0.1066536 0.8590373
+6  1 0.60 0.1095445 0.8147033
+7  1 0.60 0.1095445 0.8147033
+8  1 0.70 0.1024695 0.9008365
+9  0 0.85 0.0798436 1.0064906
+10 1 0.60 0.1095445 0.8147033
+>         df <- data.frame(matrix(nrow=N,ncol=3))
+        
+        for (i in 1:N){
+            x <- rbinom(n,size=1,prob=p)
+            pHat <- mean(x)
+            pSD <- sqrt(pHat*(1-pHat)/n)
+            CI.corrected <- ((100-CI)/2+CI)/100
+            q <- qnorm(CI.corrected)
+            pHatMax <- (pHat+q*pSD)
+            pHatMin <- (pHat-q*pSD)
+            hits <- pHatMax>p && pHatMin<p
+            df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin)
+           
+        }
+        df
+        df <- data.frame(matrix(nrow=N,ncol=3))
+>         
+>         for (i in 1:N){
++             x <- rbinom(n,size=1,prob=p)
++             pHat <- mean(x)
++             pSD <- sqrt(pHat*(1-pHat)/n)
++             CI.corrected <- ((100-CI)/2+CI)/100
++             q <- qnorm(CI.corrected)
++             pHatMax <- (pHat+q*pSD)
++             pHatMin <- (pHat-q*pSD)
++             hits <- pHatMax>p && pHatMin<p
++             df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin)
++            
++         }
+Warning messages:
+1: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.6, 0.109544511501033,  :
+  provided 5 variables to replace 3 variables
+2: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.45, 0.111242977306435,  :
+  provided 5 variables to replace 3 variables
+3: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.45, 0.111242977306435,  :
+  provided 5 variables to replace 3 variables
+4: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.5, 0.111803398874989,  :
+  provided 5 variables to replace 3 variables
+5: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.65, 0.106653645038508,  :
+  provided 5 variables to replace 3 variables
+6: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.4, 0.109544511501033,  :
+  provided 5 variables to replace 3 variables
+7: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.5, 0.111803398874989,  :
+  provided 5 variables to replace 3 variables
+8: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.5, 0.111803398874989,  :
+  provided 5 variables to replace 3 variables
+9: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.55, 0.111242977306435,  :
+  provided 5 variables to replace 3 variables
+10: In `[<-.data.frame`(`*tmp*`, i, , value = list(TRUE, 0.65, 0.106653645038508,  :
+  provided 5 variables to replace 3 variables
+>         df
+     X1   X2        X3
+1  TRUE 0.60 0.1095445
+2  TRUE 0.45 0.1112430
+3  TRUE 0.45 0.1112430
+4  TRUE 0.50 0.1118034
+5  TRUE 0.65 0.1066536
+6  TRUE 0.40 0.1095445
+7  TRUE 0.50 0.1118034
+8  TRUE 0.50 0.1118034
+9  TRUE 0.55 0.1112430
+10 TRUE 0.65 0.1066536
+>         df <- data.frame(matrix(nrow=N,ncol=5))
+        
+        for (i in 1:N){
+            x <- rbinom(n,size=1,prob=p)
+            pHat <- mean(x)
+            pSD <- sqrt(pHat*(1-pHat)/n)
+            CI.corrected <- ((100-CI)/2+CI)/100
+            q <- qnorm(CI.corrected)
+            pHatMax <- (pHat+q*pSD)
+            pHatMin <- (pHat-q*pSD)
+            hits <- pHatMax>p && pHatMin<p
+            df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin)
+           
+        }
+        df
+        df <- data.frame(matrix(nrow=N,ncol=5))
+>         
+>         for (i in 1:N){
++             x <- rbinom(n,size=1,prob=p)
++             pHat <- mean(x)
++             pSD <- sqrt(pHat*(1-pHat)/n)
++             CI.corrected <- ((100-CI)/2+CI)/100
++             q <- qnorm(CI.corrected)
++             pHatMax <- (pHat+q*pSD)
++             pHatMin <- (pHat-q*pSD)
++             hits <- pHatMax>p && pHatMin<p
++             df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin)
++            
++         }
+>         df
+     X1   X2        X3        X4        X5
+1  TRUE 0.70 0.1024695 0.9008365 0.4991635
+2  TRUE 0.55 0.1112430 0.7680322 0.3319678
+3  TRUE 0.45 0.1112430 0.6680322 0.2319678
+4  TRUE 0.55 0.1112430 0.7680322 0.3319678
+5  TRUE 0.50 0.1118034 0.7191306 0.2808694
+6  TRUE 0.65 0.1066536 0.8590373 0.4409627
+7  TRUE 0.45 0.1112430 0.6680322 0.2319678
+8  TRUE 0.50 0.1118034 0.7191306 0.2808694
+9  TRUE 0.50 0.1118034 0.7191306 0.2808694
+10 TRUE 0.45 0.1112430 0.6680322 0.2319678
+>         df <- data.frame(matrix(nrow=N,ncol=5))
+        colnames(df) <- c("hits","phat","pSD","pHatMax","pHatMin")
+        
+        for (i in 1:N){
+            x <- rbinom(n,size=1,prob=p)
+            pHat <- mean(x)
+            pSD <- sqrt(pHat*(1-pHat)/n)
+            CI.corrected <- ((100-CI)/2+CI)/100
+            q <- qnorm(CI.corrected)
+            pHatMax <- (pHat+q*pSD)
+            pHatMin <- (pHat-q*pSD)
+            hits <- pHatMax>p && pHatMin<p
+            df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin)
+           
+        }
+        df
+        df <- data.frame(matrix(nrow=N,ncol=5))
+>         colnames(df) <- c("hits","phat","pSD","pHatMax","pHatMin")
+>         
+>         for (i in 1:N){
++             x <- rbinom(n,size=1,prob=p)
++             pHat <- mean(x)
++             pSD <- sqrt(pHat*(1-pHat)/n)
++             CI.corrected <- ((100-CI)/2+CI)/100
++             q <- qnorm(CI.corrected)
++             pHatMax <- (pHat+q*pSD)
++             pHatMin <- (pHat-q*pSD)
++             hits <- pHatMax>p && pHatMin<p
++             df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin)
++            
++         }
+>         df
+    hits phat       pSD   pHatMax    pHatMin
+1   TRUE 0.70 0.1024695 0.9008365 0.49916346
+2   TRUE 0.55 0.1112430 0.7680322 0.33196777
+3   TRUE 0.45 0.1112430 0.6680322 0.23196777
+4  FALSE 0.30 0.1024695 0.5008365 0.09916346
+5   TRUE 0.55 0.1112430 0.7680322 0.33196777
+6   TRUE 0.60 0.1095445 0.8147033 0.38529670
+7   TRUE 0.60 0.1095445 0.8147033 0.38529670
+8   TRUE 0.65 0.1066536 0.8590373 0.44096270
+9   TRUE 0.50 0.1118034 0.7191306 0.28086936
+10  TRUE 0.60 0.1095445 0.8147033 0.38529670
+> plotCI(x=phat)
+Error in plotCI(x = phat) : object 'phat' not found
+> plotCI(x=phat,data=df)
+Error in plotCI(x = phat, data = df) : object 'phat' not found
+> plot(x=df$phat)
+> plotCI(x=df$phat)
+> plotCI(x=df$phat,ui=df$pHatMax,li=df$pHatMin,col=df$hits)
+> plotCI(x=df$phat,ui=df$pHatMax,li=df$pHatMin,col=df$hits)
+> ggplot(df, aes(phat, ymin=lo, y=m, ymax=hi, colour=factor(M))) +
+  geom_line(position=position_dodge(width=0.1)) +
+  geom_pointrange(position=position_dodge(width=0.1))
+ggplot(df, aes(phat, ymin=lo, y=m, ymax=hi, colour=factor(M))) +
++   geom_line(position=position_dodge(width=0.1)) +
++   geom_pointrange(position=position_dodge(width=0.1))
+Error in FUN(X[[i]], ...) : object 'm' not found
+> d <- rbind(data.frame(M=1, v=1:2, m1), data.frame(M=2, v=1:2, m2))
+
+d <- rbind(data.frame(M=1, v=1:2, m1), data.frame(M=2, v=1:2, m2))
+Error in data.frame(M = 1, v = 1:2, m1) : object 'm1' not found
+> df$x <- 1:row(df)
+Warning message:
+In 1:row(df) : numerical expression has 50 elements: only the first used
+> df
+    hits phat       pSD   pHatMax    pHatMin x
+1   TRUE 0.70 0.1024695 0.9008365 0.49916346 1
+2   TRUE 0.55 0.1112430 0.7680322 0.33196777 1
+3   TRUE 0.45 0.1112430 0.6680322 0.23196777 1
+4  FALSE 0.30 0.1024695 0.5008365 0.09916346 1
+5   TRUE 0.55 0.1112430 0.7680322 0.33196777 1
+6   TRUE 0.60 0.1095445 0.8147033 0.38529670 1
+7   TRUE 0.60 0.1095445 0.8147033 0.38529670 1
+8   TRUE 0.65 0.1066536 0.8590373 0.44096270 1
+9   TRUE 0.50 0.1118034 0.7191306 0.28086936 1
+10  TRUE 0.60 0.1095445 0.8147033 0.38529670 1
+> df$x <- 1:row(df)
+Warning message:
+In 1:row(df) : numerical expression has 60 elements: only the first used
+> df$x <- 1:nrow(df)
+> df
+    hits phat       pSD   pHatMax    pHatMin  x
+1   TRUE 0.70 0.1024695 0.9008365 0.49916346  1
+2   TRUE 0.55 0.1112430 0.7680322 0.33196777  2
+3   TRUE 0.45 0.1112430 0.6680322 0.23196777  3
+4  FALSE 0.30 0.1024695 0.5008365 0.09916346  4
+5   TRUE 0.55 0.1112430 0.7680322 0.33196777  5
+6   TRUE 0.60 0.1095445 0.8147033 0.38529670  6
+7   TRUE 0.60 0.1095445 0.8147033 0.38529670  7
+8   TRUE 0.65 0.1066536 0.8590373 0.44096270  8
+9   TRUE 0.50 0.1118034 0.7191306 0.28086936  9
+10  TRUE 0.60 0.1095445 0.8147033 0.38529670 10
+> ggplot(df, aes(x=x, y=phat, colour=hits)) + 
+  geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.1)
+ggplot(df, aes(x=x, y=phat, colour=hits)) + 
++   geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.1)
+> runApp()
+
+Listening on http://127.0.0.1:7738
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R:17:9: unexpected symbol
+16:         textOutput("hits")
+17:         plotOuput
+            ^
+Possible missing comma at:
+17:        plotOuput("plot1")
+           ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/ui.R
+  [No stack trace available]
+Warning: Error in plotOuput: could not find function "plotOuput"
+  59: tag
+  58: tags$div
+  57: div
+  56: mainPanel
+Warning: Error in plotOuput: could not find function "plotOuput"
+  59: tag
+  58: tags$div
+  57: div
+  56: mainPanel
+Warning: Error in FUN: object 'phat' not found
+  182: FUN
+  181: lapply
+  180: f
+  179: l$compute_aesthetics
+  178: f
+  177: by_layer
+  176: ggplot_build.ggplot
+  174: print.ggplot
+  166: func
+  164: f
+  163: Reduce
+  154: do
+  153: hybrid_chain
+  125: drawPlot
+  111: <reactive:plotObj>
+   95: drawReactive
+   82: origRenderFunc
+   81: output$plot1
+    1: runApp
+Warning: Error in : Aesthetics must be either length 1 or the same as the data (30): x
+  182: stop
+  181: check_aesthetics
+  180: f
+  179: l$compute_aesthetics
+  178: f
+  177: by_layer
+  176: ggplot_build.ggplot
+  174: print.ggplot
+  166: func
+  164: f
+  163: Reduce
+  154: do
+  153: hybrid_chain
+  125: drawPlot
+  111: <reactive:plotObj>
+   95: drawReactive
+   82: origRenderFunc
+   81: output$plot1
+    1: runApp
+Warning: Error in : Aesthetics must be either length 1 or the same as the data (30): x
+  182: stop
+  181: check_aesthetics
+  180: f
+  179: l$compute_aesthetics
+  178: f
+  177: by_layer
+  176: ggplot_build.ggplot
+  174: print.ggplot
+  166: func
+  164: f
+  163: Reduce
+  154: do
+  153: hybrid_chain
+  125: drawPlot
+  111: <reactive:plotObj>
+   95: drawReactive
+   82: origRenderFunc
+   81: output$plot1
+    1: runApp
+Warning: Error in : Cannot use `+.gg()` with a single argument. Did you accidentally put + on a new line?
+  169: stop
+  168: +.gg
+  167: renderPlot [/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R#44]
+  165: func
+  125: drawPlot
+  111: <reactive:plotObj>
+   95: drawReactive
+   82: origRenderFunc
+   81: output$plot1
+    1: runApp
+  C-c C-c
+> ggplot(df, aes(x=x, y=phat, colour=hits)) + 
+  geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.1)
+ggplot(df, aes(x=x, y=phat, colour=hits)) + 
++   geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.1)
+> p
+[1] 0.6
+> p=0.5
+>         df <- data.frame(matrix(nrow=N,ncol=6))
+        colnames(df) <- c("hits","pHat","pSD","pHatMax","pHatMin","x")
+        
+        for (i in 1:N){
+            x <- rbinom(n,size=1,prob=p)
+            pHat <- mean(x)
+            pSD <- sqrt(pHat*(1-pHat)/n)
+            CI.corrected <- ((100-CI)/2+CI)/100
+            q <- qnorm(CI.corrected)
+            pHatMax <- (pHat+q*pSD)
+            pHatMin <- (pHat-q*pSD)
+            hits <- pHatMax>p && pHatMin<p
+            df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin,i)
+           
+        }
+        df
+        df <- data.frame(matrix(nrow=N,ncol=6))
+>         colnames(df) <- c("hits","pHat","pSD","pHatMax","pHatMin","x")
+>         
+>         for (i in 1:N){
++             x <- rbinom(n,size=1,prob=p)
++             pHat <- mean(x)
++             pSD <- sqrt(pHat*(1-pHat)/n)
++             CI.corrected <- ((100-CI)/2+CI)/100
++             q <- qnorm(CI.corrected)
++             pHatMax <- (pHat+q*pSD)
++             pHatMin <- (pHat-q*pSD)
++             hits <- pHatMax>p && pHatMin<p
++             df[i,] <- list(hits,pHat,pSD,pHatMax,pHatMin,i)
++            
++         }
+>         df
+    hits pHat        pSD   pHatMax    pHatMin  x
+1   TRUE 0.55 0.11124298 0.7680322 0.33196777  1
+2   TRUE 0.30 0.10246951 0.5008365 0.09916346  2
+3  FALSE 0.20 0.08944272 0.3753045 0.02469549  3
+4   TRUE 0.70 0.10246951 0.9008365 0.49916346  4
+5   TRUE 0.65 0.10665365 0.8590373 0.44096270  5
+6   TRUE 0.55 0.11124298 0.7680322 0.33196777  6
+7   TRUE 0.40 0.10954451 0.6147033 0.18529670  7
+8   TRUE 0.40 0.10954451 0.6147033 0.18529670  8
+9  FALSE 0.25 0.09682458 0.4397727 0.06022730  9
+10  TRUE 0.50 0.11180340 0.7191306 0.28086936 10
+> ggplot(df, aes(x=x, y=phat, colour=hits)) + 
+  geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.1)
+ggplot(df, aes(x=x, y=phat, colour=hits)) + 
++   geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.1)
+Error in FUN(X[[i]], ...) : object 'phat' not found
+> ggplot(df, aes(x=x, y=pHat, colour=hits)) + 
++ 
++ 
++ 
++   C-c C-c
+> ggplot(df, aes(x=x, y=pHat, colour=hits)) + 
+  geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.1)
+ggplot(df, aes(x=x, y=pHat, colour=hits)) + 
++   geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.1)
+> runApp()
+
+Listening on http://127.0.0.1:7738
+  C-c C-c
+  C-c C-c
+
+> ggplot(df, aes(x=x, y=pHat, colour=hits)) + 
+  geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.2)
+ggplot(df, aes(x=x, y=pHat, colour=hits)) + 
++   geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.2)
+> g <- ggplot(df, aes(x=x, y=pHat, colour=hits)) + 
++   C-c C-c
+> g <- ggplot(df, aes(x=x, y=pHat, colour=hits)) + 
+  geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.2)
+g <- ggplot(df, aes(x=x, y=pHat, colour=hits)) + 
++   geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.2)
+> g+scale_color_manual(breaks=c("FALSE","TRUE"),values=c("red","green"))
+> 
+
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> setwd('/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/')
+> runApp()
+Error in runApp() : could not find function "runApp"
+> library(shiny)
+> runApp()
+
+Listening on http://127.0.0.1:7734
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                        ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7734
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:37:136: unexpected symbol
+36:     output$hits <-
+37:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+14:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+37:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  C-c C-c
+
+> runApp()
+
+Listening on http://127.0.0.1:7734
+Warning: Error in ggplot: could not find function "ggplot"
+  167: renderPlot [/home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R#42]
+  165: func
+  125: drawPlot
+  111: <reactive:plotObj>
+   95: drawReactive
+   82: origRenderFunc
+   81: output$plot1
+    1: runApp
+Error in parse(file, keep.source = FALSE, srcfile = src, encoding = enc) : 
+  /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R:38:136: unexpected symbol
+37:     output$hits <-
+38:         renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric
+                                                                                                                                           ^
+Possible missing comma at:
+15:        for (i in 1:N){
+                  ^
+Possible missing comma at:
+15:        for (i in 1:N){
+                     ^
+Possible missing comma at:
+38:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                          ^
+Possible missing comma at:
+38:        renderText(paste("Actual Percentage of number of samples  containing population probability within their confidence bands of ,"as.numeric(input$CI)", is  =",round(hits(),digits=2)))
+                                                                                                                                                              ^
+Warning: Error in sourceUTF8: Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+  [No stack trace available]
+Error in sourceUTF8(serverR, envir = new.env(parent = globalenv())) : 
+  Error sourcing /home/eghx/agent18/DSS/assignments/assignment-c9-w4/c9-w4-coursera/server.R
+Registered S3 methods overwritten by 'ggplot2':
+  method         from 
+  [.quosures     rlang
+  c.quosures     rlang
+  print.quosures rlang
+Warning: Error in tag: argument is missing, with no default
+  61: tag
+  60: tags$form
+  56: sidebarPanel
