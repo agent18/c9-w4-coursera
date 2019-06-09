@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Final assignment: C9-W4-Shiny Application</title>
+  <title>Final assignment: C9-W4-Shiny Application HTML slides.</title>
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -19,7 +19,7 @@
     var SLIDE_CONFIG = {
       // Slide settings
       settings: {
-                title: 'Final assignment: C9-W4-Shiny Application',
+                title: 'Final assignment: C9-W4-Shiny Application HTML slides.',
                         useBuilds: true,
         usePrettify: true,
         enableSlideAreas: true,
@@ -92,11 +92,99 @@ slide:not(.current) .plotly.html-widget{
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">June 7, 2019</p>
+            <p style="margin-top: 6px; margin-left: -2px;">June 8, 2019</p>
           </hgroup>
   </slide>
 
-RENDERED_SLIDES
+<slide class=""><hgroup><h2>What is the Assignment about</h2></hgroup><article  id="what-is-the-assignment-about">
+
+<ul>
+<li><p>This assignment is about <strong>Simulation of the confidence interval bands</strong>, which helps us understand the use of Standard Error instead of Standard deviation.</p></li>
+<li><p><strong>Example</strong>: In India, every year elections are held. It would be very handy to understand the population probability to vote for a candidate.</p>
+
+<ul>
+<li>In this case, we would take a sample and estimate if the population probability lies within the 95% confidence bands of sample probability.</li>
+</ul></li>
+<li><p>For this we need the <strong>Population Standard Deviation</strong>, which is usually not available.</p></li>
+<li><p>So we use the sample <strong>Standard error</strong>.</p></li>
+<li><p>With this assignment simulation we try to see how good this estimation is.</p></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Code</h2></hgroup><article  id="code">
+
+<p>The code is available in this <a href='https://github.com/agent18/c9-w4-coursera' title=''>github repository</a> which was made for this course. The files are huge and hence there is not much point showing them here.</p>
+
+<p>The two important files:</p>
+
+<ul>
+<li><strong>ui.R</strong> contains the user interface skeleton of the webpage</li>
+<li><strong>server.R</strong> contains the backend and all calculations</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Server Calculation Explanation</h2></hgroup><article  id="server-calculation-explanation">
+
+<!-- ![alt text](https://github.com/agent18/c9-w4-coursera/blob/master/images/graph.png "Logo Title Text 1") -->
+
+<ul>
+<li>The server calculates based on the parameters below:
+
+<ul>
+<li>population probability (p)</li>
+<li>Confidence Interval (CI)</li>
+<li>Number of samples (N)</li>
+<li>number of draws/sample(n)</li>
+</ul></li>
+<li><p>The server makes a plot of the confidence band of each sample</p>
+
+<ul>
+<li>It also calculates the percentage when the population probability is within the confidence bands of the sample.</li>
+</ul></li>
+<li><p>For the above the main formula is the Standard error with</p>
+
+<p>\(SE=\sqrt{\frac{(1-p)p}{n}}\)</p></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Server calculation of number of hits!</h2></hgroup><article  id="server-calculation-of-number-of-hits">
+
+<pre class = 'prettyprint lang-r'>n=20;N=30; CI=95;p=0.6;</pre>
+
+<pre class = 'prettyprint lang-r'>df &lt;- data.frame(matrix(nrow=N,ncol=6))
+colnames(df) &lt;- c(&quot;hits&quot;,&quot;pHat&quot;,&quot;pSD&quot;,&quot;pHatMax&quot;,&quot;pHatMin&quot;,&quot;no.sample&quot;)
+        
+for (i in 1:N){
+    x &lt;- rbinom(n,size=1,prob=p)
+    pHat &lt;- mean(x); pSD &lt;- sqrt(pHat*(1-pHat)/n);
+    CI.corrected &lt;- ((100-CI)/2+CI)/100
+    q &lt;- qnorm(CI.corrected)
+    pHatMax &lt;- (pHat+q*pSD)
+    pHatMin &lt;- (pHat-q*pSD)
+    hits &lt;- pHatMax&gt;p &amp;&amp; pHatMin&lt;p
+    df[i,] &lt;- list(hits,pHat,pSD,pHatMax,pHatMin,i)
+}
+sum(df[,1])/nrow(df)*100        </pre>
+
+<pre >## [1] 90</pre>
+
+</article></slide><slide class=""><hgroup><h2>Sources</h2></hgroup><article  id="sources">
+
+<ol>
+<li><a href='https://www.khanacademy.org/math/ap-statistics/estimating-confidence-ap/introduction-confidence-intervals/v/confidence-interval-simulation' title=''>Khan academy explanation of Confidence Intervals</a></li>
+<li><a href='https://www.khanacademy.org/computer-programming/confidence-intervals-about-a-proportion/6167177771548672' title=''>Inspiration for the assignment</a></li>
+</ol>
+
+<!-- ## P.S -->
+
+<!-- - This assignment took more than 15 hrs to conceptualize and make -->
+
+<!-- - I use emacs text editor(instead of Rstudio) which is quite intense to setup with slidify -->
+
+<!-- and knitr -->
+
+<!-- - I tried to add pictures and some other things to this presentation, -->
+
+<!--   but somehow there were issues compiling it and getting it to -->
+
+<!--   work. Equations and formatting seem to work though! --></article></slide>
 
 
   <slide class="backdrop"></slide>

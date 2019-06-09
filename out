@@ -2320,7 +2320,7 @@ ggplot(df, aes(x=x, y=pHat, colour=hits)) +
 g <- ggplot(df, aes(x=x, y=pHat, colour=hits)) + 
 +   geom_errorbar(aes(ymin=pHatMin, ymax=pHatMax), width=.2)
 > g+scale_color_manual(breaks=c("FALSE","TRUE"),values=c("red","green"))
-> 
+> (
 
 R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
 Copyright (C) 2019 The R Foundation for Statistical Computing
@@ -2504,4 +2504,115 @@ Warning: Error in tag: argument is missing, with no default
   C-c C-c
   C-c C-c
 
-> runApp
+> runApp()
+
+Listening on http://127.0.0.1:7734
+  C-c C-c
+
+> install.packages("rsconnect")
+Installing package into ‘/home/eghx/R/x86_64-pc-linux-gnu-library/3.6’
+(as ‘lib’ is unspecified)
+also installing the dependency ‘packrat’
+
+trying URL 'https://cloud.r-project.org/src/contrib/packrat_0.5.0.tar.gz'
+Content type 'application/x-gzip' length 126837 bytes (123 KB)
+==================================================
+downloaded 123 KB
+
+trying URL 'https://cloud.r-project.org/src/contrib/rsconnect_0.8.13.tar.gz'
+Content type 'application/x-gzip' length 254727 bytes (248 KB)
+==================================================
+downloaded 248 KB
+
+* installing *source* package ‘packrat’ ...
+** package ‘packrat’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (packrat)
+* installing *source* package ‘rsconnect’ ...
+** package ‘rsconnect’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (rsconnect)
+
+The downloaded source packages are in
+	‘/tmp/RtmpgsRgzt/downloaded_packages’
+> library(rsconnect)
+
+Attaching package: ‘rsconnect’
+
+The following object is masked from ‘package:shiny’:
+
+    serverInfo
+
+> rsconnect::setAccountInfo(name='agent18',
+			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
+			  secret='<SECRET>')
+rsconnect::setAccountInfo(name='agent18',
++ 			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
++ 			  secret='<SECRET>')
+> 
+Registered S3 method overwritten by 'openssl':
+  method      from
+  print.bytes Rcpp
+Error: HTTP 401
+GET https://api.shinyapps.io/v1/users/current/
+bad signature
+> rsconnect::setAccountInfo(name='agent18',
+			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
+			  secret='<SECRET>')
+rsconnect::setAccountInfo(name='agent18',
++ 			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
++ 			  secret='<SECRET>')
+> 
+Error: HTTP 401
+GET https://api.shinyapps.io/v1/users/current/
+bad signature
+> rsconnect::setAccountInfo(name='agent18',
+			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
+			  secret='<SECRET>')
+rsconnect::setAccountInfo(name='agent18',
++ 			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
++ 			  secret='<SECRET>')
+> 
+Error: HTTP 401
+GET https://api.shinyapps.io/v1/users/current/
+bad signature
+> Sys.setlocale(locale="en_US.UTF-8")
+[1] "LC_CTYPE=en_US.UTF-8;LC_NUMERIC=C;LC_TIME=en_US.UTF-8;LC_COLLATE=en_US.UTF-8;LC_MONETARY=en_US.UTF-8;LC_MESSAGES=en_US.UTF-8;LC_PAPER=nl_NL.UTF-8;LC_NAME=C;LC_ADDRESS=C;LC_TELEPHONE=C;LC_MEASUREMENT=nl_NL.UTF-8;LC_IDENTIFICATION=C"
+> rsconnect::setAccountInfo(name='agent18',
+			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
+			  secret='<SECRET>')
+rsconnect::setAccountInfo(name='agent18',
++ 			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
++ 			  secret='<SECRET>')
+> 
+Error: HTTP 401
+GET https://api.shinyapps.io/v1/users/current/
+bad signature
+> rsconnect::setAccountInfo(name='agent18',
+			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
+			  secret='8gh0M5Uw5EqDupyFBlbdGg9Xzg8EsoL+uGCOAjcg')
+rsconnect::setAccountInfo(name='agent18',
++ 			  token='6BE7CA1EBC719A04132F2F2ED4B6946A',
++ 			  secret='8gh0M5Uw5EqDupyFBlbdGg9Xzg8EsoL+uGCOAjcg')
+> rsconnect::deployApp('./')
+Error in if (nchar(parent) == 0) { : 
+  missing value where TRUE/FALSE needed
+> 
